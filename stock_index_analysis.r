@@ -5,14 +5,7 @@ theme_set(theme_light())
 
 source("functions.r")
 
-djia <- read_csv("source/djia.csv")
-sp500 <- read_csv("source/sp500.csv")
-
-stockindex <-
-    inner_join(djia, sp500, by = "date") %>%
-    mutate(across(!date, as.numeric)) %>%
-    pivot_longer(!date, values_to = "value", names_to = "index") %>%
-    filter(!is.na(value))
+stockindex <- collect_data()
 
 train_1 <- ymd("2013-06-18") %--% ymd("2015-03-06")
 train_2 <- ymd("2017-10-01") %--% ymd("2019-10-10")
@@ -84,8 +77,8 @@ stockindex %>%
         y = "Stock Index"
     ) +
     theme(legend.position = "none") +
-    facet_wrap(~index, scales = "free_y") +
+    facet_wrap(~index, scales = "free_y", ncol = 2) +
     scale_color_manual(values = color) +
     scale_fill_manual(values = color)
 
-ggsave("graphs/modelpredictions.png", width = 12, height = 6)
+ggsave("graphs/modelpredictions.png", width = 12, height = 12)
