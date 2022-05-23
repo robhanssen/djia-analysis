@@ -81,4 +81,4 @@ stockindex %>%
     scale_color_manual(values = color) +
     scale_fill_manual(values = color)
 
-ggsave("graphs/modelpredictions.png", width = 12, height = 12)
+ggsave("graphs/stockindex_modelpredictions.png", width = 12, height = 12)
