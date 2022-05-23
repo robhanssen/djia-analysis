@@ -41,3 +41,4 @@ vignettes/*.pdf
 graphs/*.pdf
 graphs/*.png
 Rdata/*.Rdata
+secret_key.inc

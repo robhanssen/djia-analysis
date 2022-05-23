@@ -8,7 +8,7 @@ period_to_dates <- function(pd) {
         ),
         unit = "month"
     )
-    tibble(date = daterange)
+    tibble::tibble(date = daterange)
 }
 
 

@@ -7,11 +7,9 @@ source("functions.r")
 
 djia <- read_csv("source/djia.csv")
 sp500 <- read_csv("source/sp500.csv")
-# nasdaq <- read_csv("source/nasdaq.csv")
 
 stockindex <-
     inner_join(djia, sp500, by = "date") %>%
-    # inner_join(nasdaq, by = "date") %>%
     mutate(across(!date, as.numeric)) %>%
     pivot_longer(!date, values_to = "value", names_to = "index") %>%
     filter(!is.na(value))
@@ -87,7 +85,7 @@ stockindex %>%
     ) +
     theme(legend.position = "none") +
     facet_wrap(~index, scales = "free_y") +
-    scale_color_manual(values = color) + 
-    scale_fill_manual(values = color) 
+    scale_color_manual(values = color) +
+    scale_fill_manual(values = color)
 
 ggsave("graphs/modelpredictions.png", width = 12, height = 6)
