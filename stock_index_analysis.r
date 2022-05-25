@@ -8,12 +8,9 @@ source("functions.r")
 stockindex <- collect_data()
 
 train_1 <- ymd("2013-06-18") %--% ymd("2015-03-06")
-train_2 <- ymd("2017-10-01") %--% ymd("2019-10-10")
-
-date_1 <- period_to_dates(train_1)
-date_2 <- period_to_dates(train_2)
-
 model_1 <- predict_index(stockindex, train_1)
+
+train_2 <- ymd("2017-10-01") %--% ymd("2019-10-10")
 model_2 <- predict_index(stockindex, train_2)
 
 color <- c(
@@ -67,7 +64,7 @@ stockindex %>%
     ) +
     scale_y_continuous(
         breaks = c(
-            seq(0, 5e3, 5e2),
+            seq(0, 10e3, 5e2),
             seq(10e3, 50e3, 5e3)
         ),
         label = scales::comma_format()
@@ -81,4 +78,8 @@ stockindex %>%
     scale_color_manual(values = color) +
     scale_fill_manual(values = color)
 
-ggsave("graphs/stockindex_modelpredictions.png", width = 12, height = 12)
+images <- stockindex %>% distinct(index) %>% count() %>% pull(n)
+
+wdt <- 12
+hgth <- (images + 1) %/% 2 * 6
+ggsave("graphs/stockindex_modelpredictions.png", width = wdt, height = hgth)
