@@ -5,7 +5,7 @@ theme_set(theme_light())
 
 source("functions.r")
 
-stockindex <- collect_data()
+stockindex <- collect_online_data()
 
 train_1 <- ymd("2013-06-18") %--% ymd("2015-03-06")
 model_1 <- predict_index(stockindex, train_1)
