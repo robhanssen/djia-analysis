@@ -5,7 +5,9 @@ theme_set(theme_light())
 
 source("functions.r")
 
-stockindex <- collect_online_data()
+index <- c("DJIA", "SP500", "NASDAQCOM", "WILL5000PR")
+
+stockindex <- collect_online_data(index)
 
 train_1 <- ymd("2013-06-18") %--% ymd("2015-03-06")
 model_1 <- predict_index(stockindex, train_1)
@@ -14,9 +16,11 @@ train_2 <- ymd("2017-10-01") %--% ymd("2019-10-10")
 model_2 <- predict_index(stockindex, train_2)
 
 color <- c(
-    "djia" = "darkblue",
-    "sp500" = "darkgreen",
-    "nasdaq" = "darkred"
+    "DJIA" = "darkblue",
+    "SP500" = "darkgreen",
+    "NASDAQCOM" = "darkred",
+    "WILL5000PR" = "purple",
+    "GDP" = "black"
 )
 
 stockindex %>%

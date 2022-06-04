@@ -24,28 +24,18 @@ collect_data <- function() {
         filter(!is.na(value))
 }
 
-collect_online_data <- function() {
-    quantmod::getSymbols("SP500", src = "FRED")
-    quantmod::getSymbols("DJIA", src = "FRED")
-    quantmod::getSymbols("NASDAQCOM", src = "FRED")
 
-    bind_rows(
-        tibble(
-            date = index(SP500),
-            value = as.numeric(SP500),
-            index = "sp500"
-        ),
-        tibble(
-            date = index(DJIA),
-            value = as.numeric(DJIA),
-            index = "djia"
-        ),
-        tibble(
-            date = index(NASDAQCOM),
-            value = as.numeric(NASDAQCOM),
-            index = "nasdaq"
-        )
-    ) %>%
+get_index <- function(index, src = "FRED") {
+    t <- quantmod::getSymbols(index, src = src, auto.assign = FALSE)
+    tibble::tibble(
+        date = zoo::index(t),
+        value = as.numeric(t),
+        index = index
+    )
+}
+
+collect_online_data <- function(indices = c("SP500", "DJIA", "NASDAQCOM")) {
+    purrr::map_df(indices, ~ get_index(.x)) %>%
         arrange(date) %>%
         filter(date > ymd(20130101))
 }
