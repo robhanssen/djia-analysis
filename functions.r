@@ -53,5 +53,10 @@ predict_index <- function(tbl, daterange) {
                 newdata = period_to_dates(daterange)
             )
         )) %>%
-        unnest(modeldata) %>% mutate(.fitted = 10^.fitted, .lower = 10^.lower, .upper = 10^.upper)
+        unnest(modeldata) %>%
+        mutate(
+            .fitted = 10^.fitted,
+            .lower = 10^.lower,
+            .upper = 10^.upper
+        )
 }
