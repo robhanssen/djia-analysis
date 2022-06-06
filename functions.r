@@ -45,7 +45,7 @@ predict_index <- function(tbl, daterange) {
         filter(date %within% daterange) %>%
         group_by(index) %>%
         nest() %>%
-        mutate(model = map(data, ~ lm(value ~ date, data = .))) %>%
+        mutate(model = map(data, ~ lm(log10(value) ~ date, data = .))) %>%
         mutate(modeldata = map(
             model,
             ~ broom::augment(.x,
@@ -53,5 +53,5 @@ predict_index <- function(tbl, daterange) {
                 newdata = period_to_dates(daterange)
             )
         )) %>%
-        unnest(modeldata)
+        unnest(modeldata) %>% mutate(.fitted = 10^.fitted, .lower = 10^.lower, .upper = 10^.upper)
 }
