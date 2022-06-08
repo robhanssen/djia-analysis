@@ -60,3 +60,63 @@ predict_index <- function(tbl, daterange) {
             .upper = 10^.upper
         )
 }
+
+
+indiv_graph <- function(idx, tbl, training) {
+    stock <-
+        tbl %>% filter(index == idx)
+
+    predict <-
+        predict_index(stock, training)
+
+    index_max <- 
+        max(stock$value, na.rm = TRUE)
+
+    g <-
+        stock %>%
+        ggplot() +
+        aes(date, value, color = idx) +
+        geom_point(alpha = .2, size = .2) +
+        geom_line(
+            data = predict,
+            aes(y = .fitted, color = index),
+            lty = 1,
+            size = .25
+        ) +
+        geom_ribbon(
+            data = predict,
+            aes(
+                y = NULL,
+                ymin = .lower,
+                ymax = .upper,
+                color = NULL,
+                fill = index
+            ),
+            alpha = .1,
+        ) +
+        scale_x_date(
+            date_breaks = "2 year",
+            date_labels = "%Y",
+            minor_breaks = NULL
+        ) +
+        scale_y_continuous(
+            breaks = c(
+                seq(0, 10e3, 5e2),
+                seq(10e3, 50e3, 5e3)
+            ),
+            label = scales::comma_format(),
+            sec.axis = sec_axis(~ . / index_max,
+                    labels = scales::percent_format())
+        ) +
+        labs(
+            x = "Date",
+            y = "Stock Index"
+        ) +
+        theme(legend.position = "none") +
+        scale_color_manual(values = color) +
+        scale_fill_manual(values = color)
+
+    fname <- paste0("graphs/", idx, ".png")
+
+    ggplot2::ggsave(fname, width = 6, height = 6, plot = g)
+}

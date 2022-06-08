@@ -23,7 +23,8 @@ color <- c(
     "GDP" = "black"
 )
 
-stockindex %>%
+plot <-
+    stockindex %>%
     ggplot() +
     aes(date, value, color = index) +
     geom_point(alpha = .2, size = .2) +
@@ -82,8 +83,14 @@ stockindex %>%
     scale_color_manual(values = color) +
     scale_fill_manual(values = color)
 
-images <- stockindex %>% distinct(index) %>% count() %>% pull(n)
+images <- length(index)
 
 wdt <- 12
 hgth <- (images + 1) %/% 2 * 6
-ggsave("graphs/stockindex_modelpredictions.png", width = wdt, height = hgth)
+
+ggsave("graphs/stockindex_modelpredictions.png",
+    width = wdt,
+    height = hgth,
+    plot = plot)
+
+no_output <- map(index, ~ indiv_graph(.x, stockindex, train_2))
