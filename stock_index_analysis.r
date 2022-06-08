@@ -9,6 +9,8 @@ index <- c("DJIA", "SP500", "NASDAQCOM", "WILL5000PR")
 
 stockindex <- collect_online_data(index)
 
+save(stockindex, file = "Rdata/stockindex.Rdata")
+
 train_1 <- ymd("2013-06-18") %--% ymd("2015-03-06")
 model_1 <- predict_index(stockindex, train_1)
 
@@ -93,4 +95,4 @@ ggsave("graphs/stockindex_modelpredictions.png",
     height = hgth,
     plot = plot)
 
-no_output <- map(index, ~ indiv_graph(.x, stockindex, train_2))
+no_output <- purrr::map(index, ~ indiv_graph(.x, stockindex, train_2))

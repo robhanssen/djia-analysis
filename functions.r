@@ -1,3 +1,4 @@
+options("getSymbols.warning4.0"=FALSE)
 
 period_to_dates <- function(pd) {
     daterange <- floor_date(
@@ -69,7 +70,7 @@ indiv_graph <- function(idx, tbl, training) {
     predict <-
         predict_index(stock, training)
 
-    index_max <- 
+    index_max <-
         max(stock$value, na.rm = TRUE)
 
     g <-
@@ -109,6 +110,7 @@ indiv_graph <- function(idx, tbl, training) {
                     labels = scales::percent_format())
         ) +
         labs(
+            title = idx,
             x = "Date",
             y = "Stock Index"
         ) +
