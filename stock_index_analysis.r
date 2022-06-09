@@ -95,4 +95,11 @@ ggsave("graphs/stockindex_modelpredictions.png",
     height = hgth,
     plot = plot)
 
-no_output <- purrr::map(index, ~ indiv_graph(.x, stockindex, train_2))
+no_output <- purrr::map(
+    index,
+    ~ indiv_graph(
+        .x,
+        stockindex %>% filter(date > ymd(20171231)),
+        train_2
+    )
+)
