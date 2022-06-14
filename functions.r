@@ -96,15 +96,11 @@ indiv_graph <- function(idx, tbl, training) {
             alpha = .1,
         ) +
         scale_x_date(
-            date_breaks = "2 year",
+            date_breaks = "1 year",
             date_labels = "%Y",
             minor_breaks = NULL
         ) +
         scale_y_continuous(
-            breaks = c(
-                seq(0, 10e3, 5e2),
-                seq(10e3, 50e3, 5e3)
-            ),
             label = scales::comma_format(),
             sec.axis = sec_axis(~ . / index_max,
                     labels = scales::percent_format())
