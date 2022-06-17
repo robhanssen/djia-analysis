@@ -1,10 +1,10 @@
 options("getSymbols.warning4.0"=FALSE)
 
-period_to_dates <- function(pd) {
+period_to_dates <- function(pd, yrs = 1) {
     daterange <- floor_date(
         seq(
             as.Date(int_start(pd)),
-            today() + years(1),
+            today() + years(yrs),
             by = "month"
         ),
         unit = "month"
