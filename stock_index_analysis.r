@@ -17,6 +17,9 @@ model_1 <- predict_index(stockindex, train_1)
 train_2 <- ymd("2017-10-01") %--% ymd("2019-10-10")
 model_2 <- predict_index(stockindex, train_2)
 
+train_3 <- ymd("2022-02-01") %--% today()
+model_3 <- predict_index(stockindex, train_3)
+
 color <- c(
     "DJIA" = "darkblue",
     "SP500" = "darkgreen",
@@ -38,6 +41,12 @@ plot <-
     ) +
     geom_line(
         data = model_2,
+        aes(y = .fitted, color = index),
+        lty = 1,
+        size = .25
+    ) +
+       geom_line(
+        data = model_3,
         aes(y = .fitted, color = index),
         lty = 1,
         size = .25
@@ -67,7 +76,7 @@ plot <-
     scale_x_date(
         date_breaks = "2 year",
         date_labels = "%Y",
-        minor_breaks = NULL
+        minor_breaks = "1 year"
     ) +
     scale_y_continuous(
         breaks = c(
