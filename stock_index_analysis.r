@@ -18,7 +18,7 @@ train_2 <- ymd("2017-10-01") %--% ymd("2019-10-10")
 model_2 <- predict_index(stockindex, train_2)
 
 train_3 <- ymd("2022-02-01") %--% today()
-model_3 <- predict_index_linear(stockindex, train_3)
+model_3 <- predict_index_choice(stockindex, train_3, regtype = "linear")
 
 color <- c(
     "DJIA" = "darkblue",
@@ -112,3 +112,15 @@ no_output <- purrr::map(
         train_2
     )
 )
+
+plot + 
+    scale_x_date(
+        date_breaks = "3 months",
+        date_labels = "%b\n%Y",
+        minor_breaks = NULL,
+        limits = c(ymd(20210101), NA)
+    )
+
+ggsave("graphs/stockindex_modelpredictions_zoomed.png",
+    width = wdt,
+    height = hgth)

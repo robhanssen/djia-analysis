@@ -58,10 +58,9 @@ predict_index_choice <- function(tbl, daterange, regtype = "exp") {
             )
         )) %>%
         unnest(modeldata) %>%
-        mutate(
-            .fitted = ifelse(regtype == "exp", 10^.fitted, .fitted),
-            .lower = ifelse(regtype == "exp", 10^.lower, .lower),
-            .upper = ifelse(regtype == "exp", 10^.upper, .upper)
+        mutate(across(starts_with("."), ~ case_when(regtype == "exp" ~ 10 ^ (.x), 
+                                                    regtype == "linear" ~ .x,
+                                                    TRUE ~ 10 ^ (.x)))
         )
 }
 
