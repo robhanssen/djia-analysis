@@ -1,4 +1,4 @@
-options("getSymbols.warning4.0"=FALSE)
+options("getSymbols.warning4.0" = FALSE)
 
 period_to_dates <- function(pd, yrs = 1) {
     daterange <- floor_date(
@@ -41,6 +41,30 @@ collect_online_data <- function(indices = c("SP500", "DJIA", "NASDAQCOM")) {
         filter(date > ymd(20130101))
 }
 
+predict_index_choice <- function(tbl, daterange, regtype = "exp") {
+    tbl %>%
+        filter(date %within% daterange) %>%
+        group_by(index) %>%
+        nest() %>%
+        mutate(model = case_when(regtype == "exp"  ~ map(data, ~ lm(log10(value) ~ date, data = .)),
+                                 regtype == "linear"  ~ map(data, ~ lm(value ~ date, data = .)),
+                                 TRUE  ~ map(data, ~ lm(log10(value) ~ date, data = .))
+        )) %>%
+        mutate(modeldata = map(
+            model,
+            ~ broom::augment(.x,
+                interval = "prediction",
+                newdata = period_to_dates(daterange)
+            )
+        )) %>%
+        unnest(modeldata) %>%
+        mutate(
+            .fitted = ifelse(regtype == "exp", 10^.fitted, .fitted),
+            .lower = ifelse(regtype == "exp", 10^.lower, .lower),
+            .upper = ifelse(regtype == "exp", 10^.upper, .upper)
+        )
+}
+
 predict_index <- function(tbl, daterange) {
     tbl %>%
         filter(date %within% daterange) %>%
@@ -62,6 +86,21 @@ predict_index <- function(tbl, daterange) {
         )
 }
 
+predict_index_linear <- function(tbl, daterange) {
+    tbl %>%
+        filter(date %within% daterange) %>%
+        group_by(index) %>%
+        nest() %>%
+        mutate(model = map(data, ~ lm(value ~ date, data = .))) %>%
+        mutate(modeldata = map(
+            model,
+            ~ broom::augment(.x,
+                interval = "prediction",
+                newdata = period_to_dates(daterange)
+            )
+        )) %>%
+        unnest(modeldata)
+}
 
 indiv_graph <- function(idx, tbl, training) {
     stock <-

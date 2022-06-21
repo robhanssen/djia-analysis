@@ -18,7 +18,7 @@ train_2 <- ymd("2017-10-01") %--% ymd("2019-10-10")
 model_2 <- predict_index(stockindex, train_2)
 
 train_3 <- ymd("2022-02-01") %--% today()
-model_3 <- predict_index(stockindex, train_3)
+model_3 <- predict_index_linear(stockindex, train_3)
 
 color <- c(
     "DJIA" = "darkblue",
