@@ -117,7 +117,7 @@ plot +
     scale_x_date(
         date_breaks = "3 months",
         date_labels = "%b\n%Y",
-        minor_breaks = NULL,
+        minor_breaks = "1 month",
         limits = c(ymd(20210101), NA)
     )
 
