@@ -69,6 +69,7 @@ predictions %>%
     ggplot() +
     aes(date, rel_residue, color = factor(month)) +
     geom_point() +
+    geom_line() +
     geom_line(
         data = wigglepred, aes(y = .fitted, color = NULL),
         lty = 2,
@@ -78,6 +79,7 @@ predictions %>%
     scale_y_continuous(
         name = "Relative deviation from predicted amount",
         breaks = 0.25 * -10:10
-    )
+    ) +
+    labs(color = "Month")
 
 ggsave("graphs/wiggle-analysis.png", width = 8, height = 6)
