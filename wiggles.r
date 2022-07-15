@@ -72,7 +72,7 @@ predictions %>%
     geom_point() +
     geom_line() +
     geom_line(
-        data = wigglepred, aes(y = .fitted, color = factor(month)),
+        data = wigglepred, aes(y = 1.5*.fitted, color = factor(month)),
         lty = 2,
         # color = "gray50"
     ) +
@@ -84,3 +84,8 @@ predictions %>%
     labs(color = "Month")
 
 ggsave("graphs/wiggle-analysis.png", width = 8, height = 6)
+
+inner_join(wigglepred %>% rename(.fittedwiggle = .fitted), predictions %>% rename(.fittedpred = .fitted), by = "date") %>%
+    ggplot + aes(rel_residue, 1.5 * .fittedwiggle, color = factor(month)) + geom_point() + geom_abline() +
+    scale_x_continuous(limits = c(-1,1)) + 
+    scale_y_continuous(limits = c(-1,1)) 
