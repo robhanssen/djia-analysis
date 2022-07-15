@@ -57,7 +57,8 @@ wigglepred <- wigglemod %>%
         newdata = tibble(time = 1:150)
     ))) %>%
     unnest(sinemodpred) %>%
-    mutate(date = cuttoff_date - days(1) + days(time))
+    mutate(date = cuttoff_date - days(1) + days(time)) %>%
+    mutate(month = month(date))
 
 
 wiggleparam <- wigglemod %>%
@@ -71,9 +72,9 @@ predictions %>%
     geom_point() +
     geom_line() +
     geom_line(
-        data = wigglepred, aes(y = .fitted, color = NULL),
+        data = wigglepred, aes(y = .fitted, color = factor(month)),
         lty = 2,
-        color = "gray50"
+        # color = "gray50"
     ) +
     scale_x_date(date_breaks = "2 weeks", date_label = "%b %d") +
     scale_y_continuous(
