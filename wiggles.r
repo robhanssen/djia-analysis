@@ -89,3 +89,9 @@ inner_join(wigglepred %>% rename(.fittedwiggle = .fitted), predictions %>% renam
     ggplot + aes(rel_residue, 1.5 * .fittedwiggle, color = factor(month)) + geom_point() + geom_abline() +
     scale_x_continuous(limits = c(-1,1)) + 
     scale_y_continuous(limits = c(-1,1)) 
+
+
+inner_join(wigglepred %>% rename(.fittedwiggle = .fitted), predictions %>% rename(.fittedpred = .fitted), by = "date") %>%
+    ggplot + aes(date, .fittedpred) + geom_line() + facet_wrap(~index, scale = "free_y") +
+    geom_point(aes(y = value)) +
+    geom_line(aes(y = -.fittedwiggle * resid + .fittedpred))
