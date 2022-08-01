@@ -11,7 +11,7 @@ stockindex <- collect_online_data(index)
 
 save(stockindex, file = "Rdata/stockindex.Rdata")
 
-predict_index_2 <- function(tbl, daterange) {
+predict_index_2 <- function(tbl, daterange, yrs = 0) {
     tbl %>%
         filter(date %within% daterange) %>%
         group_by(index) %>%
@@ -21,7 +21,7 @@ predict_index_2 <- function(tbl, daterange) {
             model,
             ~ broom::augment(.x,
                 interval = "prediction",
-                newdata = period_to_dates(daterange, yrs = 0)
+                newdata = period_to_dates(daterange, yrs)
             )
         )) %>%
         unnest(modeldata) #%>%
@@ -39,6 +39,10 @@ model_1 <- predict_index_2(stockindex, train_1)
 
 train_2 <- ymd("2020-06-01") %--% ymd("2021-03-01")
 model_2 <- predict_index_2(stockindex, train_2)
+
+train_3 <- ymd("2022-07-01") %--% today()
+model_3 <- predict_index_2(stockindex, train_3, yrs = 1L)
+
 
 color <- c(
     "DJIA" = "darkblue",
@@ -62,6 +66,12 @@ plot <-
     ) +
     geom_line(
         data = model_2,
+        aes(y = .fitted, color = index),
+        lty = 1,
+        size = .25
+    ) +
+    geom_line(
+        data = model_3,
         aes(y = .fitted, color = index),
         lty = 1,
         size = .25
