@@ -17,7 +17,7 @@ model_1 <- predict_index(stockindex, train_1)
 train_2 <- ymd("2017-10-01") %--% ymd("2019-10-10")
 model_2 <- predict_index(stockindex, train_2)
 
-train_3 <- ymd("2022-04-01") %--% today()
+train_3 <- ymd("2022-01-21") %--% ymd("2022-07-01")
 model_3 <- predict_index_choice(stockindex, train_3, regtype = "linear")
 
 color <- c(
@@ -45,7 +45,7 @@ plot <-
         lty = 1,
         size = .25
     ) +
-       geom_line(
+    geom_line(
         data = model_3,
         aes(y = .fitted, color = index),
         lty = 1,
@@ -102,7 +102,8 @@ hgth <- (images + 1) %/% 2 * 6
 ggsave("graphs/stockindex_modelpredictions.png",
     width = wdt,
     height = hgth,
-    plot = plot)
+    plot = plot
+)
 
 no_output <- purrr::map(
     index,
@@ -113,7 +114,7 @@ no_output <- purrr::map(
     )
 )
 
-plot + 
+plot +
     scale_x_date(
         date_breaks = "3 months",
         date_labels = "%b\n%Y",
@@ -123,4 +124,5 @@ plot +
 
 ggsave("graphs/stockindex_modelpredictions_zoomed.png",
     width = wdt,
-    height = hgth)
+    height = hgth
+)
