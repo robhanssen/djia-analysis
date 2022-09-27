@@ -38,7 +38,7 @@ sinemodel <- function(tbl) {
         data = tbl,
         trace = TRUE,
         rel_residue ~ a0 * sin((time - a1) / a2),
-        start = list(a0 = 1, a1 = 50, a2 = 6), 
+        start = list(a0 = 1, a1 = 50, a2 = 66), 
         control = nls.control(maxiter = 100)
     )
 }
@@ -55,7 +55,7 @@ wigglepred <- wigglemod %>%
 
 wigglepred <- wigglemod %>%
     mutate(sinemodpred = map(sinemod, ~ broom::augment(.x,
-        newdata = tibble(time = 1:150)
+        newdata = tibble(time = 1:350)
     ))) %>%
     unnest(sinemodpred) %>%
     mutate(date = cuttoff_date - days(1) + days(time)) %>%
@@ -77,7 +77,7 @@ predictions %>%
         lty = 2,
         # color = "gray50"
     ) +
-    scale_x_date(date_breaks = "2 weeks", date_label = "%b %d") +
+    scale_x_date(date_breaks = "2 month", date_label = "%b %d") +
     scale_y_continuous(
         name = "Relative deviation from predicted amount",
         breaks = 0.25 * -10:10
