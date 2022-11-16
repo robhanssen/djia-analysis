@@ -42,4 +42,5 @@ Rplots.pdf
 graphs/*.pdf
 graphs/*.png
 Rdata/*.Rdata
+dev/*.png
 secret_key.inc
