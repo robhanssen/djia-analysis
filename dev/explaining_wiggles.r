@@ -12,12 +12,10 @@ line_graph <- predictions %>%
 rel_graph <- predictions %>%
     ggplot() +
     aes(date, rel_residue, color = index) +
-    # facet_wrap(~index, scales = "free_y") +
-    geom_line(, show.legend = F)+
-    # geom_line(data = stockindex, aes(y = value), show.legend = F)
+    geom_line(, show.legend = F) +
     labs(y = NULL, title = "Relative deviation from linear model")
 
-wigglemod_byindex <- 
+wigglemod_byindex <-
     predictions %>%
     mutate(time = as.numeric(date - cuttoff_date)) %>%
     group_by(index) %>%
@@ -31,7 +29,10 @@ wigglemod_byindex %>%
     pivot_wider(names_from = "term", values_from = "estimate")
 
 wigglemod_byindex %>%
-    mutate(params = map(sinemod, ~broom::augment(.x, newdata = tibble(time = 1:365)))) %>%
+    mutate(params = map(
+        sinemod,
+        ~ broom::augment(.x, newdata = tibble(time = 1:365))
+    )) %>%
     unnest(params) %>%
     mutate(date = cuttoff_date + days(time) - 1) %>%
     ggplot() +
@@ -42,7 +43,7 @@ wigglemod_byindex %>%
 
 
 
-wigglemod_all <- 
+wigglemod_all <-
     predictions %>%
     mutate(time = as.numeric(date - cuttoff_date)) %>%
     # group_by(index) %>%
@@ -58,14 +59,21 @@ wigglemod_all %>%
 
 
 sine_graph <- wigglemod_all %>%
-    mutate(params = map(sinemod, ~broom::augment(.x, newdata = tibble(time = 1:365)))) %>%
+    mutate(params = map(
+        sinemod,
+        ~ broom::augment(.x, newdata = tibble(time = 1:365))
+    )) %>%
     unnest(params) %>%
     mutate(date = cuttoff_date + days(time) - 1) %>%
     ggplot() +
     aes(date, .fitted) +
     geom_line(, show.legend = F) +
-    geom_line(data = predictions, aes(y = rel_residue), show.legend = F) + 
+    geom_line(data = predictions, aes(y = rel_residue), show.legend = F) +
     labs(y = NULL, title = "Relative deviation periodic model")
 
-p_all =  (line_graph) /(rel_graph + sine_graph) + plot_annotation(title = "Modeling stock indices")
-ggsave("graphs/wiggle_model_explanation.png", width = 12, height = 6, plot = p_all)
+p_all <- (line_graph) / (rel_graph + sine_graph) +
+    plot_annotation(title = "Modeling stock indices")
+
+ggsave("graphs/wiggle_model_explanation.png",
+    width = 12, height = 6, plot = p_all
+)
