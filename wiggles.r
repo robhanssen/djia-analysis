@@ -96,3 +96,5 @@ inner_join(wigglepred %>% rename(.fittedwiggle = .fitted), predictions %>% renam
     ggplot + aes(date, .fittedpred) + geom_line() + facet_wrap(~index, scale = "free_y") +
     geom_point(aes(y = value)) +
     geom_line(aes(y = -.fittedwiggle * resid + .fittedpred))
+
+source("dev/explaining_wiggles.r")
