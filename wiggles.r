@@ -1,6 +1,7 @@
 # the great wiggle
 library(tidyverse)
 library(lubridate)
+library(patchwork)
 theme_set(theme_light())
 source("functions.r")
 
