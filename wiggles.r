@@ -40,7 +40,7 @@ sinemodel <- function(tbl) {
         trace = TRUE,
         rel_residue ~ a0 * sin((time - a1) / a2),
         start = list(a0 = 1, a1 = 50, a2 = 66), 
-        control = nls.control(maxiter = 100)
+        control = nls.control(maxiter = 300)
     )
 }
 
