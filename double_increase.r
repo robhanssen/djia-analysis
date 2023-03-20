@@ -62,19 +62,19 @@ plot <-
         data = model_1,
         aes(y = .fitted, color = index),
         lty = 1,
-        size = .25
+        linewidth = .25
     ) +
     geom_line(
         data = model_2,
         aes(y = .fitted, color = index),
         lty = 1,
-        size = .25
+        linewidth = .25
     ) +
     geom_line(
         data = model_3,
         aes(y = .fitted, color = index),
         lty = 1,
-        size = .25
+        linewidth = .25
     ) +
     geom_ribbon(
         data = model_1,
