@@ -46,9 +46,10 @@ predict_index_choice <- function(tbl, daterange, regtype = "exp") {
         filter(date %within% daterange) %>%
         group_by(index) %>%
         nest() %>%
-        mutate(model = case_when(regtype == "exp"  ~ map(data, ~ lm(log10(value) ~ date, data = .)),
-                                 regtype == "linear"  ~ map(data, ~ lm(value ~ date, data = .)),
-                                 TRUE  ~ map(data, ~ lm(log10(value) ~ date, data = .))
+        mutate(model = case_when(
+            regtype == "exp" ~ map(data, ~ lm(log10(value) ~ date, data = .)),
+            regtype == "linear" ~ map(data, ~ lm(value ~ date, data = .)),
+            TRUE ~ map(data, ~ lm(log10(value) ~ date, data = .))
         )) %>%
         mutate(modeldata = map(
             model,
@@ -58,10 +59,11 @@ predict_index_choice <- function(tbl, daterange, regtype = "exp") {
             )
         )) %>%
         unnest(modeldata) %>%
-        mutate(across(starts_with("."), ~ case_when(regtype == "exp" ~ 10 ^ (.x), 
-                                                    regtype == "linear" ~ .x,
-                                                    TRUE ~ 10 ^ (.x)))
-        )
+        mutate(across(starts_with("."), ~ case_when(
+            regtype == "exp" ~ 10^(.x),
+            regtype == "linear" ~ .x,
+            TRUE ~ 10^(.x)
+        )))
 }
 
 predict_index <- function(tbl, daterange) {
@@ -120,7 +122,7 @@ indiv_graph <- function(idx, tbl, training) {
             data = predict,
             aes(y = .fitted, color = index),
             lty = 1,
-            size = .25
+            linewidth = .25
         ) +
         geom_ribbon(
             data = predict,
@@ -141,7 +143,8 @@ indiv_graph <- function(idx, tbl, training) {
         scale_y_continuous(
             label = scales::comma_format(),
             sec.axis = sec_axis(~ . / index_max,
-                    labels = scales::percent_format())
+                labels = scales::percent_format()
+            )
         ) +
         labs(
             title = idx,

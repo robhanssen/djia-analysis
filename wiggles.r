@@ -39,7 +39,7 @@ sinemodel <- function(tbl) {
         data = tbl,
         trace = TRUE,
         rel_residue ~ a0 * sin((time - a1) / a2),
-        start = list(a0 = 1, a1 = 50, a2 = 16), 
+        start = list(a0 = 1, a1 = 50, a2 = 16),
         control = nls.control(maxiter = 300)
     )
 }
@@ -55,9 +55,11 @@ wigglepred <- wigglemod %>%
     mutate(date = cuttoff_date - days(1) + days(time))
 
 wigglepred <- wigglemod %>%
-    mutate(sinemodpred = map(sinemod, ~ broom::augment(.x,
-        newdata = tibble(time = 1:350)
-    ))) %>%
+    mutate(sinemodpred = map(
+        sinemod, ~ broom::augment(.x,
+            newdata = tibble(time = 1:350)
+        )
+    )) %>%
     unnest(sinemodpred) %>%
     mutate(date = cuttoff_date - days(1) + days(time)) %>%
     mutate(month = month(date))
@@ -74,7 +76,7 @@ predictions %>%
     geom_point() +
     geom_line() +
     geom_line(
-        data = wigglepred, aes(y = 1.5*.fitted, color = factor(month)),
+        data = wigglepred, aes(y = 1.5 * .fitted, color = factor(month)),
         lty = 2,
         # color = "gray50"
     ) +
@@ -88,13 +90,13 @@ predictions %>%
 ggsave("graphs/wiggle-analysis.png", width = 8, height = 6)
 
 inner_join(wigglepred %>% rename(.fittedwiggle = .fitted), predictions %>% rename(.fittedpred = .fitted), by = "date") %>%
-    ggplot + aes(rel_residue, 1.5 * .fittedwiggle, color = factor(month)) + geom_point() + geom_abline() +
-    scale_x_continuous(limits = c(-1,1)) + 
-    scale_y_continuous(limits = c(-1,1)) 
+    ggplot() + aes(rel_residue, 1.5 * .fittedwiggle, color = factor(month)) + geom_point() + geom_abline() +
+    scale_x_continuous(limits = c(-1, 1)) +
+    scale_y_continuous(limits = c(-1, 1))
 
 
 inner_join(wigglepred %>% rename(.fittedwiggle = .fitted), predictions %>% rename(.fittedpred = .fitted), by = "date") %>%
-    ggplot + aes(date, .fittedpred) + geom_line() + facet_wrap(~index, scale = "free_y") +
+    ggplot() + aes(date, .fittedpred) + geom_line() + facet_wrap(~index, scale = "free_y") +
     geom_point(aes(y = value)) +
     geom_line(aes(y = -.fittedwiggle * resid + .fittedpred))
 

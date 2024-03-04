@@ -24,12 +24,12 @@ predict_index_2 <- function(tbl, daterange, yrs = 0) {
                 newdata = period_to_dates(daterange, yrs)
             )
         )) %>%
-        unnest(modeldata) #%>%
-        # mutate(
-        #     .fitted = 10^.fitted,
-        #     .lower = 10^.lower,
-        #     .upper = 10^.upper
-        # )
+        unnest(modeldata) # %>%
+    # mutate(
+    #     .fitted = 10^.fitted,
+    #     .lower = 10^.lower,
+    #     .upper = 10^.upper
+    # )
 }
 
 
@@ -127,7 +127,8 @@ hgth <- (images + 1) %/% 2 * 6
 ggsave("graphs/stockindex_two_increases.png",
     width = wdt,
     height = hgth,
-    plot = plot)
+    plot = plot
+)
 
 # no_output <- purrr::map(
 #     index,

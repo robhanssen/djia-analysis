@@ -1,18 +1,16 @@
-
-
 line_graph <- predictions %>%
     ggplot() +
     aes(date, .fitted, color = index) +
     facet_wrap(~index, scales = "free_y") +
-    geom_line(, show.legend = F) +
-    geom_line(data = stockindex, aes(y = value), show.legend = F) +
+    geom_line(, show.legend = FALSE) +
+    geom_line(data = stockindex, aes(y = value), show.legend = FALSE) +
     labs(y = NULL, title = "Stock index values with linear model")
 
 
 rel_graph <- predictions %>%
     ggplot() +
     aes(date, rel_residue, color = index) +
-    geom_line(, show.legend = F) +
+    geom_line(, show.legend = FALSE) +
     labs(y = NULL, title = "Relative deviation from linear model")
 
 wigglemod_byindex <-
@@ -38,8 +36,8 @@ wigglemod_byindex %>%
     ggplot() +
     aes(date, .fitted, color = index) +
     facet_wrap(~index, scales = "free_y") +
-    geom_line(, show.legend = F) +
-    geom_line(data = predictions, aes(y = rel_residue), show.legend = F)
+    geom_line(, show.legend = FALSE) +
+    geom_line(data = predictions, aes(y = rel_residue), show.legend = FALSE)
 
 
 
@@ -67,8 +65,8 @@ sine_graph <- wigglemod_all %>%
     mutate(date = cuttoff_date + days(time) - 1) %>%
     ggplot() +
     aes(date, .fitted) +
-    geom_line(, show.legend = F) +
-    geom_line(data = predictions, aes(y = rel_residue), show.legend = F) +
+    geom_line(, show.legend = FALSE) +
+    geom_line(data = predictions, aes(y = rel_residue), show.legend = FALSE) +
     labs(y = NULL, title = "Relative deviation periodic model")
 
 p_all <- (line_graph) / (rel_graph + sine_graph) +
