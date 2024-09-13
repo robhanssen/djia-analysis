@@ -63,13 +63,13 @@ vol_g <-
         aes(y = DJT.Volume),
         lty = 1
     ) +
-    scale_y_log10(
+    scale_y_continuous(
         # limits = c(1, NA),
-        labels = scales::label_number()
+        labels = scales::label_number(scale = 1e-6, suffix = " M")
     ) +
     labs(
         x = "",
-        y = "$DJT stock value (Close and Open)"
+        y = "$DJT sales volume"
     ) +
     geom_vline(xintercept = ymd(20240721), alpha = .2)
 
