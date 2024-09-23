@@ -7,11 +7,11 @@ theme_set(theme_light())
 events <-
     tribble(
         ~date, ~event,
-        "2024-07-23", "Joe Biden steps down",
         "2024-03-22", "Truth Social IPO",
-        "2024-08-19", "DNC Convention",
         "2024-07-15", "GOP Convention",
+        "2024-07-23", "Joe Biden steps down",
         "2024-07-26", "First Trump shooting",
+        "2024-08-19", "DNC Convention",
         "2024-09-16", "Second Trump shooting",
         "2024-09-19", "Open sale Truth Social"
     ) %>%
