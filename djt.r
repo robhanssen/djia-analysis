@@ -2,6 +2,23 @@ library(tidyverse)
 library(patchwork)
 theme_set(theme_light())
 
+
+# event info
+events <-
+    tribble(
+        ~date, ~event,
+        "2024-07-23", "Joe Biden steps down",
+        "2024-03-22", "Truth Social IPO",
+        "2024-08-19", "DNC Convention",
+        "2024-07-15", "GOP Convention",
+        "2024-07-26", "First Trump shooting",
+        "2024-09-16", "Second Trump shooting",
+        "2024-09-19", "Open sale Truth Social"
+    ) %>%
+    mutate(date = ymd(date)) %>%
+    arrange(date)
+
+
 get_index_yahoo <- function(index, src = "yahoo") {
     t <- quantmod::getSymbols(index, src = src, auto.assign = FALSE)
     as_tibble(t) %>%
@@ -13,6 +30,7 @@ get_index_yahoo <- function(index, src = "yahoo") {
 
 djt <- get_index_yahoo("DJT")
 
+events <- events %>% left_join(djt, by = "date")
 
 mod <-
     djt %>%
@@ -45,7 +63,7 @@ price_g <-
         x = "",
         y = "$DJT stock value (Close and Open)"
     ) +
-    geom_vline(xintercept = ymd(20240721), alpha = .2) +
+    # geom_vline(xintercept = ymd(20240721), alpha = .2) +
     geom_line(
         data = line_fit,
         aes(y = .fitted), color = "gray70"
@@ -71,6 +89,22 @@ vol_g <-
         x = "",
         y = "$DJT sales volume"
     ) +
-    geom_vline(xintercept = ymd(20240721), alpha = .2)
+    # geom_vline(xintercept = ymd(20240721), alpha = .2)
+        geom_point(
+        data = events,
+        aes(
+            x = date,
+            y = DJT.Volume
+        ), size = 3
+    ) +
+    ggrepel::geom_label_repel(
+        data = events,
+        aes(
+            x = date,
+            y = DJT.Volume,
+            label = event,
+        ), point.padding = 1, nudge_y = 30e6, segment.linetype = 2
+    )
+
 
 ggsave("graphs/DJT_tracking.png", height = 8, width = 8, plot = price_g / vol_g)
