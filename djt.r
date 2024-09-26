@@ -8,6 +8,7 @@ events <-
     tribble(
         ~date, ~event,
         "2024-03-22", "Truth Social IPO",
+        "2024-04-15", "Announcement additional stock",
         "2024-07-15", "GOP Convention",
         "2024-07-23", "Joe Biden steps down",
         "2024-07-26", "First Trump shooting",
@@ -47,6 +48,8 @@ price_g <-
     djt %>%
     filter(date > "2024-03-21") %>%
     ggplot(aes(x = date)) +
+    geom_vline(xintercept = events$date, alpha = .05, linewidth = 2) +
+    coord_cartesian(xlim = ymd(c(20240321), today()+ weeks(2))) +
     geom_step(
         aes(y = DJT.Close),
         lty = 1
@@ -77,6 +80,7 @@ vol_g <-
     djt %>%
     filter(date > "2024-03-21") %>%
     ggplot(aes(x = date)) +
+    geom_vline(xintercept = events$date, alpha = .05, linewidth = 2) +
     geom_line(
         aes(y = DJT.Volume),
         lty = 1
@@ -85,6 +89,7 @@ vol_g <-
         # limits = c(1, NA),
         labels = scales::label_number(scale = 1e-6, suffix = " M")
     ) +
+    coord_cartesian(xlim = ymd(c(20240321), today()+ weeks(2))) +
     labs(
         x = "",
         y = "$DJT sales volume"
