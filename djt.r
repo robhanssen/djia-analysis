@@ -14,7 +14,9 @@ events <-
         "2024-07-26", "First Trump shooting",
         "2024-08-19", "DNC Convention",
         "2024-09-16", "Second Trump shooting",
-        "2024-09-19", "Open sale Truth Social"
+        "2024-09-19", "Open sale Truth Social",
+        "2024-11-05", "Election day",
+        "2025-01-20", "Inauguration day"
     ) %>%
     mutate(date = ymd(date)) %>%
     arrange(date)
