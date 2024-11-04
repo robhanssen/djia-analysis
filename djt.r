@@ -3,6 +3,17 @@ library(patchwork)
 theme_set(theme_light())
 
 
+adjust_to_weekday <- function(date) {
+    adj <- sapply(weekdays(date), \(d) {
+        case_when(
+            d == "Saturday" ~ 2,
+            d == "Sunday" ~ 1,
+            TRUE ~ 0
+        )
+    })
+    date + days(adj)
+}
+
 # event info
 events <-
     tribble(
@@ -15,10 +26,12 @@ events <-
         "2024-08-19", "DNC Convention",
         "2024-09-16", "Second Trump shooting",
         "2024-09-19", "Open sale Truth Social",
+        "2024-10-27", "MSG event",
         "2024-11-05", "Election day",
         "2025-01-20", "Inauguration day"
     ) %>%
     mutate(date = ymd(date)) %>%
+    mutate(date = adjust_to_weekday(date)) %>%
     arrange(date)
 
 # add in dates for important up and down events for fitting
@@ -26,7 +39,8 @@ fit_line_dates <-
     tribble(
         ~date, ~name,
         "2024-07-21", "first_down",
-        "2024-09-26", "up_after_free_window"
+        "2024-09-26", "up_after_free_window",
+        "2024-10-28", "after_MSG"
     ) %>%
     mutate(across(starts_with("date"), ymd))
 
@@ -127,7 +141,7 @@ vol_g <-
             x = date,
             y = DJT.Volume,
             label = event,
-        ), point.padding = 1, nudge_y = 30e6, segment.linetype = 2
+        ), point.padding = 1, nudge_y = 50e6, segment.linetype = 1, alpha = .5
     )
 
 ggsave("graphs/DJT_tracking.png", height = 8, width = 8, plot = price_g / vol_g)
