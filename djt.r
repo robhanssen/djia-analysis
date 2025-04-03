@@ -28,7 +28,8 @@ events <-
         "2024-09-19", "Open sale Truth Social",
         "2024-10-27", "MSG event",
         "2024-11-05", "Election day",
-        "2025-01-20", "Inauguration day"
+        "2025-01-20", "Inauguration day",
+        "2025-04-02", "Tariff announcement"
     ) %>%
     mutate(date = ymd(date)) %>%
     mutate(date = adjust_to_weekday(date)) %>%
